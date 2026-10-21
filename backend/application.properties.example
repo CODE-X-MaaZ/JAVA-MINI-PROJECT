@@ -1,0 +1,28 @@
+# Food Rescue Connect - Local Development Configuration Template
+# Copy this file to src/main/resources/application-local.properties or set environment variables.
+# Do NOT commit real database passwords to version control.
+
+server.port=8080
+
+# Database credentials
+# Option 1: Set environment variables:
+#   SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/food_rescue_connect
+#   SPRING_DATASOURCE_USERNAME=your_username
+#   SPRING_DATASOURCE_PASSWORD=your_password
+# Option 2: Edit local properties file (ignored in .gitignore)
+
+spring.datasource.url=jdbc:mysql://localhost:3306/food_rescue_connect?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=your_mysql_password_here
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# JPA / Hibernate Local Development Shortcut
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+# Jackson ISO 8601 formatting
+spring.jackson.serialization.write-dates-as-timestamps=false
+
+# Allowed Frontend Origins (Vite development server)
+app.cors.allowed-origins=http://localhost:5173,http://127.0.0.1:5173
