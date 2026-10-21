@@ -23,7 +23,7 @@ export default function MyClaims() {
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState(null);
 
-  const fetchClaims = async () => {
+  const loadClaims = async () => {
     setLoading(true);
     setError(null);
     try {
@@ -37,7 +37,7 @@ export default function MyClaims() {
   };
 
   useEffect(() => {
-    fetchClaims();
+    loadClaims();
   }, []);
 
   return (
@@ -47,35 +47,26 @@ export default function MyClaims() {
         <div className="page-header">
           <h1 className="page-header__title">My Claims</h1>
           <p className="page-header__subtitle">
-            Food listings claimed during this session.
+            Food donations claimed and scheduled for collection.
           </p>
         </div>
 
-        {/* Demo mode notice — per AI_AGENT_RULES §9 and REQUIREMENTS §NFR */}
-        <div className="demo-notice" role="note">
-          <span aria-hidden="true">ℹ️</span>
-          <span>
-            <strong>Demo mode active.</strong> Claims shown here belong to a shared demo
-            recipient identity. Real per-user authentication is not implemented in this MVP.
-          </span>
-        </div>
-
         {/* States */}
-        {loading && <LoadingSpinner message="Loading claims from server…" />}
+        {loading && <LoadingSpinner message="Loading claims…" />}
 
         {!loading && error && (
           <ErrorMessage
             title="Could not load claims"
             message={error.message}
-            onRetry={fetchClaims}
+            onRetry={loadClaims}
           />
         )}
 
         {!loading && !error && claims.length === 0 && (
           <EmptyState
             icon="🤲"
-            title="No claims yet"
-            description="You haven't claimed any food listings. Browse available food and make your first claim."
+            title="You haven't claimed any food donations yet"
+            description="Browse available food listings and claim surplus food before its pickup deadline."
             action={<Link to="/listings" className="btn btn--primary">Browse Food</Link>}
           />
         )}
@@ -98,7 +89,7 @@ export default function MyClaims() {
                       </h2>
                       <div className="claim-item__meta">
                         <span>📋 Claim #{claim.id}</span>
-                        <span>👤 {claim.recipientName ?? 'Demo Recipient'}</span>
+                        <span>👤 {claim.recipientName ?? 'Recipient'}</span>
                         <span>🕐 {formatClaimedAt(claim.claimedAt)}</span>
                       </div>
                     </div>

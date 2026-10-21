@@ -257,7 +257,7 @@ export default function PostFood() {
               <input
                 type="text"
                 {...field('donorName')}
-                placeholder="e.g. Sample Hostel"
+                placeholder="e.g. Central Campus Mess / Grand Hotel"
                 maxLength={120}
               />
               {errors.donorName && (
@@ -313,3 +313,4 @@ export default function PostFood() {
     </div>
   );
 }
+

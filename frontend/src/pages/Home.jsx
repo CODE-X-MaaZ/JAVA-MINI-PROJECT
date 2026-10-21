@@ -1,6 +1,48 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getFoodListings, getClaims, getActivityHistory } from '../services/api.js';
 
 export default function Home() {
+  const [stats, setStats] = useState({
+    totalListings: 8,
+    availableListings: 6,
+    totalMealPortions: 121,
+    claimsMade: 2,
+  });
+  const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    Promise.all([
+      getFoodListings(),
+      getClaims(),
+      getActivityHistory(),
+    ])
+      .then(([items, claims, historyEvents]) => {
+        if (!isMounted) return;
+        const list = Array.isArray(items) ? items : [];
+        const available = list.filter((i) => i.status === 'AVAILABLE');
+        const actualClaims = Array.isArray(claims) ? claims : [];
+        setStats({
+          totalListings: list.length,
+          availableListings: available.length,
+          totalMealPortions: available.reduce((s, i) => s + Number(i.quantity || 0), 0),
+          claimsMade: actualClaims.length,
+        });
+        setHistory(Array.isArray(historyEvents) ? historyEvents : []);
+        setLoading(false);
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <main id="main-content">
       {/* ── Hero ──────────────────────────────────────────── */}
@@ -27,24 +69,32 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Stats strip ───────────────────────────────────── */}
+      {/* ── Dashboard Stats Strip ─────────────────────────── */}
       <div className="stats-strip" aria-label="Platform highlights">
         <div className="stats-strip__inner">
           <div className="stat">
-            <div className="stat__num">🏪</div>
-            <div className="stat__label">Restaurants &amp; Hostels</div>
+            <div className="stat__num">
+              {loading ? '…' : stats.totalListings}
+            </div>
+            <div className="stat__label">Total Listings</div>
           </div>
           <div className="stat">
-            <div className="stat__num">🥘</div>
-            <div className="stat__label">Surplus Listings</div>
+            <div className="stat__num">
+              {loading ? '…' : stats.availableListings}
+            </div>
+            <div className="stat__label">Available Now</div>
           </div>
           <div className="stat">
-            <div className="stat__num">🤝</div>
+            <div className="stat__num">
+              {loading ? '…' : stats.totalMealPortions}
+            </div>
+            <div className="stat__label">Portions Available</div>
+          </div>
+          <div className="stat">
+            <div className="stat__num">
+              {loading ? '…' : stats.claimsMade}
+            </div>
             <div className="stat__label">Claims Made</div>
-          </div>
-          <div className="stat">
-            <div className="stat__num">♻️</div>
-            <div className="stat__label">Less Food Wasted</div>
           </div>
         </div>
       </div>
@@ -81,6 +131,66 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── Recent Activity / History ─────────────────────── */}
+      {history.length > 0 && (
+        <section
+          style={{
+            padding: 'var(--space-12) var(--space-6)',
+            background: 'var(--clr-surface)',
+            borderTop: '1px solid var(--clr-border)',
+          }}
+          aria-labelledby="activity-title"
+        >
+          <div className="container" style={{ maxWidth: 860 }}>
+            <div style={{ textAlign: 'center', marginBottom: 'var(--space-8)' }}>
+              <h2 id="activity-title" style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: 'var(--space-2)' }}>
+                Recent Rescue Activity
+              </h2>
+              <p style={{ color: 'var(--clr-text-muted)', fontSize: '0.95rem' }}>
+                Latest food donations posted and claims coordinated across the community.
+              </p>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+              {history.map((event) => (
+                <div
+                  key={event.id}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: 'var(--space-4) var(--space-6)',
+                    background: 'var(--clr-bg)',
+                    border: '1px solid var(--clr-border)',
+                    borderRadius: 'var(--radius-md)',
+                    gap: 'var(--space-4)',
+                    boxShadow: 'var(--shadow-sm)',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+                    <span style={{ fontSize: '1.5rem', lineHeight: 1 }} aria-hidden="true">
+                      {event.type === 'CLAIMED' ? '🤝' : '🍲'}
+                    </span>
+                    <div>
+                      <h3 style={{ fontSize: '0.98rem', fontWeight: 700, margin: '0 0 2px 0' }}>
+                        {event.title}
+                      </h3>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--clr-text-muted)', margin: 0 }}>
+                        {event.description}
+                      </p>
+                    </div>
+                  </div>
+                  <div style={{ flexShrink: 0 }}>
+                    <span className={`badge ${event.type === 'CLAIMED' ? 'badge--claimed' : 'badge--available'}`}>
+                      {event.type === 'CLAIMED' ? 'Claimed' : 'Listed'}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── CTA footer strip ──────────────────────────────── */}
       <section

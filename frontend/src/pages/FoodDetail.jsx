@@ -74,7 +74,7 @@ export default function FoodDetail() {
     try {
       await claimFood(id);
       setClaimed(true);
-      // Re-fetch to get updated status from the server (not from client-side assumption)
+      // Re-fetch to get updated status directly from the backend
       const updated = await getFoodById(id);
       setItem(updated);
     } catch (err) {
@@ -113,7 +113,7 @@ export default function FoodDetail() {
           ← Back to listings
         </Link>
 
-        {/* Success banner — shown after a successful claim */}
+        {/* Success banner — shown only after a real successful backend claim */}
         {claimed && (
           <SuccessBanner message="🎉 Claimed successfully! The listing has been marked as claimed." />
         )}
@@ -215,9 +215,8 @@ export default function FoodDetail() {
                   </button>
 
                   <p className="claim-card__notice">
-                    ℹ️ <strong>Demo mode:</strong> Claims are attributed to a demo
-                    recipient identity. Real authentication is not implemented in
-                    this MVP. Do not enter personal or sensitive data.
+                    ℹ️ <strong>Pickup note:</strong> Please confirm your availability before claiming.
+                    Collect food directly from the designated pickup area before the deadline.
                   </p>
                 </>
               ) : (

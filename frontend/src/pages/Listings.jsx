@@ -86,7 +86,7 @@ export default function Listings() {
         )}
 
         {/* States */}
-        {loading && <LoadingSpinner message="Loading food listings from server…" />}
+        {loading && <LoadingSpinner message="Loading food listings…" />}
 
         {!loading && error && (
           <ErrorMessage
@@ -112,7 +112,7 @@ export default function Listings() {
         {!loading && !error && items.length === 0 && (
           <EmptyState
             icon="📭"
-            title="No listings yet"
+            title="No food donations available yet"
             description="No surplus food has been posted. Be the first donor to help your community."
             action={<Link to="/post" className="btn btn--primary">Post Food Now</Link>}
           />
