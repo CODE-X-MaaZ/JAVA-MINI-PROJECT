@@ -64,3 +64,4 @@ public class FoodController {
         return ResponseEntity.ok(claim);
     }
 }
+

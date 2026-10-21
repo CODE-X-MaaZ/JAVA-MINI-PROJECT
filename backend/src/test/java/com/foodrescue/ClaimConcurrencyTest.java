@@ -113,3 +113,4 @@ class ClaimConcurrencyTest {
         assertEquals(1, claimRepository.count(), "Exactly one claim record must exist in database");
     }
 }
+

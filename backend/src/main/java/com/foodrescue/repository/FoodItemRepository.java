@@ -23,3 +23,4 @@ public interface FoodItemRepository extends JpaRepository<FoodItem, Long> {
     @Query("SELECT f FROM FoodItem f WHERE f.id = :id")
     Optional<FoodItem> findByIdForUpdate(@Param("id") Long id);
 }
+

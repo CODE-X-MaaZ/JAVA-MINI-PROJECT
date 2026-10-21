@@ -90,3 +90,4 @@ public class Claim {
         this.claimedAt = claimedAt;
     }
 }
+

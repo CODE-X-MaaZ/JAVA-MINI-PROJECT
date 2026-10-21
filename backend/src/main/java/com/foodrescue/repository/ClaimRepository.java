@@ -15,3 +15,4 @@ public interface ClaimRepository extends JpaRepository<Claim, Long> {
 
     boolean existsByFoodItemId(Long foodItemId);
 }
+

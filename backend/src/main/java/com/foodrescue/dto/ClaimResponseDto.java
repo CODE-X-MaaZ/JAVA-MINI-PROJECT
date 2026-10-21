@@ -93,3 +93,4 @@ public class ClaimResponseDto {
         this.claimedAt = claimedAt;
     }
 }
+

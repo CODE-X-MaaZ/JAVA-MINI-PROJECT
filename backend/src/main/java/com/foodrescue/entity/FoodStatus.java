@@ -5,3 +5,4 @@ public enum FoodStatus {
     CLAIMED,
     PICKED_UP
 }
+

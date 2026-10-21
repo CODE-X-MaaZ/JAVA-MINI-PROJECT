@@ -5,3 +5,4 @@ public class FoodAlreadyClaimedException extends RuntimeException {
         super(message);
     }
 }
+

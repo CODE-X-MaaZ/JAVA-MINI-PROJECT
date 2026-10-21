@@ -6,3 +6,4 @@ public enum DonorType {
     CATERER,
     OTHER
 }
+

@@ -278,3 +278,4 @@ class FoodControllerIntegrationTest {
                 .andExpect(jsonPath("$.error", is("BAD_REQUEST")));
     }
 }
+

@@ -163,3 +163,4 @@ Allowed origins:
 - `http://127.0.0.1:5173`
 
 Configurable via `app.cors.allowed-origins` in `application.properties`.
+
